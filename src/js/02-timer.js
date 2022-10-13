@@ -24,6 +24,8 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     console.log(selectedDates[0]);
+    const stringDate = selectedDates.join();
+    Notify.info(stringDate);
     deadLine = selectedDates[0].getTime();
     if (deadLine < Date.now()) {
       Notify.failure('The selected date is before todays date!', {
@@ -33,10 +35,7 @@ const options = {
       });
       refs.startBtnRef.setAttribute('disabled', false);
     } else {
-      Notify.success('The selected date is greater than today!', {
-        clickToClose: true,
-        backOverlay: true,
-      });
+      Notify.success('The selected date is greater than today!');
       refs.startBtnRef.removeAttribute('disabled');
     }
   },
@@ -64,7 +63,6 @@ const timer = {
         });
       }
       const leftTime = convertMs(deltaTime);
-      console.log(leftTime);
       Object.entries(leftTime).forEach(([name, value]) => {
         this.refs[name].textContent = addLeadingZero(value);
       });
