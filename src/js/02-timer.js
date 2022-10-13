@@ -63,11 +63,11 @@ const timer = {
           backOverlay: true,
         });
       }
-      const { days, hours, minutes, seconds } = convertMs(deltaTime);
-      this.refs.days.textContent = days;
-      this.refs.hours.textContent = hours;
-      this.refs.minutes.textContent = minutes;
-      this.refs.seconds.textContent = seconds;
+      const leftTime = convertMs(deltaTime);
+      console.log(leftTime);
+      Object.entries(leftTime).forEach(([name, value]) => {
+        this.refs[name].textContent = addLeadingZero(value);
+      });
     }, TIMER_DELAY);
   },
 
@@ -82,14 +82,14 @@ const timer = {
 function startTimer() {
   timer.startTimer(refs, deadLine);
   refs.startBtnRef.setAttribute('disabled', false);
+  Notify.success('Start timer', {
+    backOverlay: true,
+    position: 'center-center',
+  });
 }
 
-function pad(value) {
+function addLeadingZero(value) {
   return String(value).padStart(2, '0');
-}
-
-function padDays(value) {
-  return String(value).padStart(3, '0');
 }
 
 function convertMs(ms) {
@@ -100,13 +100,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = padDays(Math.floor(ms / day));
+  const days = Math.floor(ms / day);
   // Remaining hours
-  const hours = pad(Math.floor((ms % day) / hour));
+  const hours = Math.floor((ms % day) / hour);
   // Remaining minutes
-  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+  const minutes = Math.floor(((ms % day) % hour) / minute);
   // Remaining seconds
-  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
 }
